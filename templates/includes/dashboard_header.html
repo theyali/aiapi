@@ -7,35 +7,32 @@
                 Dashboard
             </a>
 
-            <a href="#"
+            <a href="{% url 'dashboard:ai_image' %}"
                class="{% if request.resolver_match.url_name == 'ai_image' %}active{% endif %}">
                 AI image
             </a>
 
-            <a href="#"
+            <a href="{% url 'dashboard:guides' %}"
                class="{% if request.resolver_match.url_name == 'guides' %}active{% endif %}">
                 Guides
             </a>
 
-            <a href="#"
+            <a href="{% url 'dashboard:settings' %}"
                class="{% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
                 Settings
             </a>
         </nav>
 
         <div class="dashboard-header-actions">
-            <div class="lang-switcher dashboard-lang-switcher">
+            <div class="lang-switcher">
                 <button type="button">RU</button>
                 <button type="button" class="active">EN</button>
             </div>
 
-            <form method="post" action="{% url 'accounts:logout' %}" class="dashboard-logout-form">
-                {% csrf_token %}
-                <button type="submit" class="dashboard-logout-btn">
-                    <span>↪</span>
-                    Sign out
-                </button>
-            </form>
+            <a href="{% url 'accounts:logout' %}" class="dashboard-logout-btn">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                Sign out
+            </a>
         </div>
 
     </div>

@@ -1,0 +1,19 @@
+{% extends "base/dashboard_base.html" %}
+
+{% block content %}
+<section class="dashboard-page">
+    <div class="dashboard-container">
+        <h1 class="dashboard-page-title">Guides</h1>
+
+        <div class="dashboard-card">
+            <h2>API Documentation</h2>
+
+            <p>Here will be simple guides for using AIAPI.</p>
+
+            <pre><code>POST /api/v1/chat/completions/
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json</code></pre>
+        </div>
+    </div>
+</section>
+{% endblock %}

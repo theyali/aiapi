@@ -1,0 +1,222 @@
+{% extends "base/dashboard_base.html" %}
+
+{% block content %}
+<section class="dashboard-page settings-page">
+    <div class="dashboard-container">
+
+        <h1 class="dashboard-page-title">Settings</h1>
+
+        <div class="settings-grid">
+
+            <div class="settings-card">
+                <div class="settings-card-head">
+                    <div class="settings-icon blue">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+
+                    <div>
+                        <span class="settings-kicker">ACCOUNT SECURITY</span>
+                        <h2>Change password</h2>
+                    </div>
+                </div>
+
+                <form
+                    method="post"
+                    class="settings-password-form js-change-password-form"
+                    action="{% url 'dashboard:ajax_change_password' %}"
+                >
+                    {% csrf_token %}
+
+                    <div class="ajax-message js-password-message"></div>
+
+                    <div class="form-group">
+                        <label>Current password</label>
+
+                        <div class="input-wrap">
+                            <input type="password" name="current_password">
+                            <button type="button" class="password-eye js-password-eye">
+                                <i class="fa-regular fa-eye"></i>
+                            </button>
+                        </div>
+
+                        <div class="field-errors js-error-current_password"></div>
+                    </div>
+
+                    <div class="settings-two-cols">
+                        <div class="form-group">
+                            <label>New password</label>
+
+                            <div class="input-wrap">
+                                <input type="password" name="new_password">
+                                <button type="button" class="password-eye js-password-eye">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="field-errors js-error-new_password"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm new password</label>
+
+                            <div class="input-wrap">
+                                <input type="password" name="confirm_password">
+                                <button type="button" class="password-eye js-password-eye">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+
+                            <div class="field-errors js-error-confirm_password"></div>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button type="submit" class="settings-submit js-password-submit">
+                            <span class="btn-text">Update password</span>
+                            <span class="btn-loader"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="settings-card settings-info-card">
+                <div class="settings-icon orange">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+
+                <h3>API key</h3>
+
+                <p>
+                    After changing the password your API key will not be changed automatically.
+                    You can regenerate API keys manually below.
+                </p>
+
+                <p>Your current browser session stays active.</p>
+            </div>
+
+        </div>
+
+        <div class="api-keys-card">
+            <div class="api-keys-head">
+                <h2>
+                    <i class="fa-solid fa-key"></i>
+                    API keys
+                </h2>
+
+                <span class="api-keys-count">
+                    {{ api_keys|length }} / 20
+                </span>
+            </div>
+
+            <form
+                method="post"
+                class="api-key-create-form js-api-key-create-form"
+                action="{% url 'api_keys:ajax_create' %}"
+            >
+                {% csrf_token %}
+
+                <div class="ajax-message js-api-key-message"></div>
+
+                <input type="text" name="name" placeholder="Key name">
+
+                <div class="limit-input-wrap">
+                    <input type="number" name="token_limit" min="1" placeholder="Limit, M tokens">
+                    <span>млн</span>
+                </div>
+
+                <button type="submit" class="api-key-create-btn js-api-key-create-submit">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="btn-text">Create</span>
+                    <span class="btn-loader"></span>
+                </button>
+            </form>
+
+            <div class="api-keys-list js-api-keys-list">
+
+                {% for key in api_keys %}
+                    <div class="api-key-row js-api-key-row" data-id="{{ key.id }}">
+                        <div class="api-key-name">
+                            <label>Name</label>
+
+                            <div class="api-key-field">
+                                <span class="js-api-key-name">{{ key.name }}</span>
+
+                                {% if key.is_primary %}
+                                    <b>Primary</b>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="api-key-value">
+                            <label>API key</label>
+
+                            <div class="api-key-field">
+                                <span class="js-api-key-masked">{{ key.masked_key }}</span>
+                                <input type="hidden" class="js-api-key-raw" value="">
+
+                                <button type="button" class="icon-btn js-copy-api-key" title="Copy">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="api-key-usage">
+                            <label>Used</label>
+
+                            <div class="usage-percent js-api-key-percent">
+                                {{ key.usage_percent }}%
+                            </div>
+
+                            <div class="usage-bar">
+                                <span style="width: {{ key.usage_percent }}%;"></span>
+                            </div>
+
+                            <div class="usage-numbers">
+                                {{ key.used_tokens }} /
+                                {% if key.token_limit %}
+                                    {{ key.token_limit }}
+                                {% else %}
+                                    ∞
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="api-key-actions">
+                            <button type="button"
+                                    class="icon-btn js-toggle-api-key"
+                                    title="Disable / Enable"
+                                    data-url="{% url 'api_keys:ajax_toggle' %}">
+                                {% if key.is_active %}
+                                    <i class="fa-solid fa-xmark"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-check"></i>
+                                {% endif %}
+                            </button>
+
+                            <button type="button"
+                                    class="icon-btn js-regenerate-api-key"
+                                    title="Regenerate"
+                                    data-url="{% url 'api_keys:ajax_regenerate' %}">
+                                <i class="fa-solid fa-rotate"></i>
+                            </button>
+
+                            <button type="button"
+                                    class="icon-btn danger js-delete-api-key"
+                                    title="Delete"
+                                    data-url="{% url 'api_keys:ajax_delete' %}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="empty-api-keys js-empty-api-keys">
+                        API keys not found. Create your first key.
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
