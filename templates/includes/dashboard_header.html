@@ -1,0 +1,42 @@
+<header class="dashboard-header">
+    <div class="dashboard-header-inner">
+
+        <nav class="dashboard-tabs">
+            <a href="{% url 'dashboard:index' %}"
+               class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                Dashboard
+            </a>
+
+            <a href="#"
+               class="{% if request.resolver_match.url_name == 'ai_image' %}active{% endif %}">
+                AI image
+            </a>
+
+            <a href="#"
+               class="{% if request.resolver_match.url_name == 'guides' %}active{% endif %}">
+                Guides
+            </a>
+
+            <a href="#"
+               class="{% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+                Settings
+            </a>
+        </nav>
+
+        <div class="dashboard-header-actions">
+            <div class="lang-switcher dashboard-lang-switcher">
+                <button type="button">RU</button>
+                <button type="button" class="active">EN</button>
+            </div>
+
+            <form method="post" action="{% url 'accounts:logout' %}" class="dashboard-logout-form">
+                {% csrf_token %}
+                <button type="submit" class="dashboard-logout-btn">
+                    <span>↪</span>
+                    Sign out
+                </button>
+            </form>
+        </div>
+
+    </div>
+</header>

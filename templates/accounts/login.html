@@ -1,0 +1,95 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-container">
+
+        <h1 class="auth-title">Sign In</h1>
+
+        <div class="auth-card">
+            <form
+                method="post"
+                class="auth-form js-ajax-auth-form"
+                action="{% url 'accounts:ajax_login' %}"
+                data-success-url="{% url 'dashboard:index' %}"
+            >
+                {% csrf_token %}
+
+                <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
+
+                <div class="ajax-message js-auth-message"></div>
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Логин</label>
+
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="{{ form.username.name }}"
+                            id="{{ form.username.id_for_label }}"
+                            placeholder="Введите логин"
+                            value="{{ form.username.value|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-errors js-error-username"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Пароль</label>
+
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+
+                        <input
+                            type="password"
+                            name="{{ form.password.name }}"
+                            id="{{ form.password.id_for_label }}"
+                            placeholder="Введите пароль"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-errors js-error-password"></div>
+                </div>
+
+                <button type="submit" class="auth-submit js-auth-submit">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader"></span>
+                </button>
+            </form>
+
+            <div class="auth-divider"></div>
+
+            <p class="auth-switch">
+                Нет аккаунта?
+                <a href="{% url 'accounts:register' %}">Создать</a>
+            </p>
+
+            <div class="social-grid">
+                <button type="button" class="social-btn">
+                    <span class="telegram-icon">
+                        <i class="fa-brands fa-telegram"></i>
+                    </span>
+                    Telegram
+                </button>
+
+                <button type="button" class="social-btn">
+                    <span class="google-icon">
+                        <i class="fa-brands fa-google"></i>
+                    </span>
+                    Google
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

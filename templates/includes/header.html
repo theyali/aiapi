@@ -1,0 +1,26 @@
+<header class="site-header auth-header">
+    <div class="header-inner">
+
+        <a href="{% url 'core:home' %}" class="logo">
+            <span>aiapi.sale</span>
+        </a>
+
+        <div class="header-actions">
+            <div class="lang-switcher">
+                <button type="button">RU</button>
+                <button type="button" class="active">EN</button>
+            </div>
+
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboard:index' %}" class="btn btn-primary">
+                    Open Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary">
+                    Sign In
+                </a>
+            {% endif %}
+        </div>
+
+    </div>
+</header>

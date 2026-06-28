@@ -1,0 +1,150 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-container">
+
+        <h1 class="auth-title">Create Account</h1>
+
+        <div class="auth-card">
+            <form
+                method="post"
+                class="auth-form js-ajax-auth-form"
+                action="{% url 'accounts:ajax_register' %}"
+                data-success-url="{% url 'dashboard:index' %}"
+            >
+                {% csrf_token %}
+
+                <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
+
+                <div class="ajax-message js-auth-message"></div>
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Логин</label>
+
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="{{ form.username.name }}"
+                            id="{{ form.username.id_for_label }}"
+                            placeholder="Придумайте логин"
+                            value="{{ form.username.value|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-errors js-error-username"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <i class="fa-regular fa-envelope"></i>
+                        </span>
+
+                        <input
+                            type="email"
+                            name="{{ form.email.name }}"
+                            id="{{ form.email.id_for_label }}"
+                            placeholder="Введите email"
+                            value="{{ form.email.value|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-errors js-error-email"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Пароль</label>
+
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+
+                        <input
+                            type="password"
+                            name="{{ form.password1.name }}"
+                            id="{{ form.password1.id_for_label }}"
+                            placeholder="Минимум 8 символов"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-errors js-error-password1"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Повторите пароль</label>
+
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+
+                        <input
+                            type="password"
+                            name="{{ form.password2.name }}"
+                            id="{{ form.password2.id_for_label }}"
+                            placeholder="Введите пароль ещё раз"
+                            required
+                        >
+                    </div>
+
+                    <div class="field-errors js-error-password2"></div>
+                </div>
+
+                <div class="captcha-placeholder">
+                    <div class="captcha-left">
+                        <span class="captcha-check">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                        <span>Успешно!</span>
+                    </div>
+
+                    <div class="captcha-brand">
+                        <strong>CLOUDFLARE</strong>
+                        <small>Privacy · Help</small>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit js-auth-submit">
+                    <span class="btn-text">Create Account</span>
+                    <span class="btn-loader"></span>
+                </button>
+            </form>
+
+            <div class="auth-divider"></div>
+
+            <p class="auth-switch">
+                Уже есть аккаунт?
+                <a href="{% url 'accounts:login' %}">Войти</a>
+            </p>
+
+            <div class="social-grid">
+                <button type="button" class="social-btn">
+                    <span class="telegram-icon">
+                        <i class="fa-brands fa-telegram"></i>
+                    </span>
+                    Telegram
+                </button>
+
+                <button type="button" class="social-btn">
+                    <span class="google-icon">
+                        <i class="fa-brands fa-google"></i>
+                    </span>
+                    Google
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

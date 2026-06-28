@@ -1,0 +1,50 @@
+{% extends "base/dashboard_base.html" %}
+
+{% block content %}
+<section class="dashboard-page">
+    <div class="dashboard-container">
+
+        <div class="dashboard-title-row">
+            <h1>
+                Dashboard {{ request.user.username }}
+            </h1>
+
+            <a href="#" class="invite-btn">
+                <span>🎁</span>
+                Invite friends
+            </a>
+        </div>
+
+        <div class="bonus-banner">
+            <div>
+                <strong>Bonus 5M is available for you</strong>
+            </div>
+
+            <button type="button">
+                Confirm Telegram
+            </button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <span class="card-label">Token Balance</span>
+                <strong>0 tokens</strong>
+                <p>Balance logic will be added in the Billing stage.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="card-label">API Requests</span>
+                <strong>0 requests</strong>
+                <p>Usage logs will be added in the Gateway stage.</p>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="card-label">API Keys</span>
+                <strong>0 keys</strong>
+                <p>API key management will be added soon.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

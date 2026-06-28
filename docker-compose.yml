@@ -1,0 +1,105 @@
+services:
+  web:
+    build: .
+    container_name: aiapi_web
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: aiapi_postgres
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+      - ./deploy/postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./deploy/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+    command: >
+      postgres
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -h 127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  pgbouncer:
+    image: edoburu/pgbouncer:v1.24.1-p1
+    container_name: aiapi_pgbouncer
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - ./deploy/pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+    command: >
+      sh -c '
+      echo "\"$${POSTGRES_USER}\" \"$${POSTGRES_PASSWORD}\"" > /tmp/userlist.txt
+      && exec pgbouncer /etc/pgbouncer/pgbouncer.ini
+      '
+    ports:
+      - "6432:6432"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 6432 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: aiapi_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    build: .
+    container_name: aiapi_celery_worker
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    command: celery -A config worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  celery_beat:
+    build: .
+    container_name: aiapi_celery_beat
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      pgbouncer:
+        condition: service_healthy
+      redis:
+        condition: service_started

@@ -1,0 +1,166 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-floating-card hero-card-left-top">
+        <span>🤖</span>
+    </div>
+
+    <div class="hero-floating-card hero-card-left-bottom">
+        <span>⌘</span>
+    </div>
+
+    <div class="hero-floating-card hero-card-right-top">
+        <span>▭</span>
+    </div>
+
+    <div class="hero-floating-card hero-card-right-bottom">
+        <span>▯</span>
+    </div>
+
+    <div class="hero-container">
+        <div class="hero-badge-row">
+            <span class="hero-badge">Near</span>
+            <span class="hero-badge-text">unlimited</span>
+        </div>
+
+        <h1>
+            AI models by<br>
+            one API token
+        </h1>
+
+        <p class="hero-subtitle">
+            Private AI API gateway access — manage tokens, API keys,
+            providers and model billing from one dashboard.
+        </p>
+
+        <div class="hero-actions">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboard:index' %}" class="hero-btn">
+                    Open Dashboard
+                    <span>→</span>
+                </a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="hero-btn">
+                    Open Dashboard
+                    <span>→</span>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="hero-tools">
+            <span>VS Code</span>
+            <span>Cursor</span>
+            <span>Windsurf</span>
+            <span>Zed</span>
+            <span>JetBrains</span>
+        </div>
+
+        <div class="terminal-card">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <span class="terminal-label">TERMINAL</span>
+            </div>
+
+            <div class="terminal-body">
+                <p class="terminal-user">aiapi@setup:~$</p>
+                <p>
+                    <span>curl -X POST https://api.aiapi.sale/v1/chat/completions</span>
+                    <span class="terminal-cursor"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="landing-section">
+    <div class="landing-container">
+        <div class="section-heading">
+            <span>Features</span>
+            <h2>Everything for your AI API gateway</h2>
+            <p>
+                Create API keys, set token limits, track usage,
+                manage model billing and connect providers from Django Admin.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>API Keys</h3>
+                <p>Create separate API keys for different projects and protect your balance with token limits.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Token Balance</h3>
+                <p>Users buy token packages and every API request deducts tokens using model multipliers.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Provider Management</h3>
+                <p>Add providers and models from Django Admin without changing the code.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="landing-section">
+    <div class="landing-container">
+        <div class="section-heading">
+            <span>Pricing</span>
+            <h2>Simple token packages</h2>
+            <p>For MVP we start with mock payments and three basic packages.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Starter</h3>
+                <strong>$5</strong>
+                <p>5M tokens</p>
+            </div>
+
+            <div class="price-card featured">
+                <h3>Pro</h3>
+                <strong>$20</strong>
+                <p>25M tokens</p>
+            </div>
+
+            <div class="price-card">
+                <h3>Business</h3>
+                <strong>$70</strong>
+                <p>100M tokens</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="landing-section faq-section">
+    <div class="landing-container">
+        <div class="section-heading">
+            <span>FAQ</span>
+            <h2>Frequently asked questions</h2>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <h3>Is this a real AI provider?</h3>
+                <p>No. This is a gateway service. Users send requests to our API, and our backend forwards them to real AI providers.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Do users need provider API keys?</h3>
+                <p>No. Users only need an API key from our dashboard.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Will MVP use real OpenAI/OpenRouter?</h3>
+                <p>Not at first. MVP starts with MockProviderClient, then real providers can be connected later.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
