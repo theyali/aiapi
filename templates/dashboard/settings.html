@@ -96,7 +96,12 @@
 
         </div>
 
-        <div class="api-keys-card">
+        <div
+            class="api-keys-card"
+            data-toggle-url="{% url 'api_keys:ajax_toggle' %}"
+            data-regenerate-url="{% url 'api_keys:ajax_regenerate' %}"
+            data-delete-url="{% url 'api_keys:ajax_delete' %}"
+        >
             <div class="api-keys-head">
                 <h2>
                     <i class="fa-solid fa-key"></i>
@@ -134,7 +139,7 @@
             <div class="api-keys-list js-api-keys-list">
 
                 {% for key in api_keys %}
-                    <div class="api-key-row js-api-key-row" data-id="{{ key.id }}">
+                    <div class="api-key-row js-api-key-row {% if not key.is_active %}is-disabled{% endif %}" data-id="{{ key.id }}">
                         <div class="api-key-name">
                             <label>Name</label>
 
@@ -154,7 +159,7 @@
                                 <span class="js-api-key-masked">{{ key.masked_key }}</span>
                                 <input type="hidden" class="js-api-key-raw" value="">
 
-                                <button type="button" class="icon-btn js-copy-api-key" title="Copy">
+                                <button type="button" class="js-copy-api-key" title="Copy">
                                     <i class="fa-regular fa-copy"></i>
                                 </button>
                             </div>

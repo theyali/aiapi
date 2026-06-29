@@ -28,4 +28,4 @@ class UserLoginView(LoginView):
 
 
 class UserLogoutView(LogoutView):
-    pass
+    next_page = "core:home"

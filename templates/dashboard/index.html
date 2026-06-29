@@ -5,46 +5,276 @@
     <div class="dashboard-container">
 
         <div class="dashboard-title-row">
-            <h1>
-                Dashboard {{ request.user.username }}
-            </h1>
+            <h1>Dashboard {{ request.user.username }}</h1>
 
-            <a href="#" class="invite-btn">
-                <span>🎁</span>
+            <button type="button" class="invite-btn js-open-invite-modal">
+                <i class="fa-solid fa-gift"></i>
                 Invite friends
-            </a>
-        </div>
-
-        <div class="bonus-banner">
-            <div>
-                <strong>Bonus 5M is available for you</strong>
-            </div>
-
-            <button type="button">
-                Confirm Telegram
             </button>
         </div>
 
-        <div class="dashboard-grid">
-            <div class="dashboard-card">
-                <span class="card-label">Token Balance</span>
-                <strong>0 tokens</strong>
-                <p>Balance logic will be added in the Billing stage.</p>
+        <div class="dashboard-top-grid">
+            <div class="dashboard-stat-card">
+                <span class="card-label">Tokens</span>
+
+                <div class="stat-main">
+                    <strong>{{ formatted_balance }}</strong>
+                    <span>tokens</span>
+                </div>
+
+                <a href="#pricing" class="stat-action-btn">
+                    Top up tokens
+                </a>
             </div>
 
-            <div class="dashboard-card">
-                <span class="card-label">API Requests</span>
-                <strong>0 requests</strong>
-                <p>Usage logs will be added in the Gateway stage.</p>
+            <div class="dashboard-stat-card">
+                <span class="card-label">Requests in 7 Days</span>
+
+                <div class="stat-main">
+                    <strong>{{ requests_in_7_days }}</strong>
+                </div>
             </div>
 
-            <div class="dashboard-card">
-                <span class="card-label">API Keys</span>
-                <strong>0 keys</strong>
-                <p>API key management will be added soon.</p>
+            <div class="dashboard-stat-card">
+                <span class="card-label">Estimated OpenAI API Cost</span>
+
+                <div class="stat-main">
+                    <strong>${{ estimated_cost|floatformat:2 }}</strong>
+                </div>
+
+                <p>by tokens · Base ~2.5$ / 1M</p>
             </div>
+
+            <div class="dashboard-actions-card">
+                <a href="{% url 'dashboard:settings' %}" class="api-key-settings-link">
+                    API key settings
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+                <div class="dashboard-action-buttons">
+                    <a href="#" class="tg-channel-btn">
+                        <i class="fa-brands fa-telegram"></i>
+                        Our TG Channel
+                    </a>
+
+                    <a href="#" class="support-btn">
+                        <i class="fa-regular fa-life-ring"></i>
+                        Support
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-main-grid">
+            <div class="dashboard-panel chart-panel">
+                <h2>Charged Tokens for 2 Days</h2>
+
+                <div class="chart-legend">
+                    <span><b class="legend-blue"></b> OpenAI</span>
+                    <span><b class="legend-orange"></b> Claude</span>
+                    <span><b class="legend-green"></b> Chinese</span>
+                </div>
+
+                <div class="simple-chart js-dashboard-chart">
+                    {{ chart_data|json_script:"dashboard-chart-data" }}
+
+                    <div class="chart-grid-line line-top"></div>
+                    <div class="chart-grid-line line-middle"></div>
+                    <div class="chart-grid-line line-bottom"></div>
+
+                    <div class="chart-y-label y-top">{{ max_chart_value }}</div>
+                    <div class="chart-y-label y-middle">{{ middle_chart_value|floatformat:0 }}</div>
+                    <div class="chart-y-label y-bottom">0</div>
+
+                    <svg class="chart-svg js-chart-svg" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                        <polyline class="chart-line-shadow js-chart-line-shadow" points=""></polyline>
+                        <polyline class="chart-line js-chart-line" points=""></polyline>
+                        <g class="js-chart-dots"></g>
+                    </svg>
+
+                    <div class="chart-x-labels js-chart-x-labels"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-panel billing-panel">
+                <h2>Token Billing</h2>
+                <p>The multiplier is applied to actually used tokens.</p>
+
+                <div class="billing-columns">
+                    <div class="billing-provider">
+                        <div class="billing-provider-head">
+                            <i class="fa-brands fa-openai"></i>
+                            <strong>OpenAI</strong>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>GPT-5.4 mini</span>
+                            <b>x0.9</b>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>GPT-5.4</span>
+                            <b>x1</b>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>GPT-5.5</span>
+                            <b>x4.5</b>
+                        </div>
+                    </div>
+
+                    <div class="billing-provider">
+                        <div class="billing-provider-head">
+                            <i class="fa-solid fa-sun claude-icon"></i>
+                            <strong>Claude</strong>
+                            <em>Temporarily unavailable</em>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>claude-haiku-4-5</span>
+                            <b>x0.75</b>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>claude-sonnet-4-6</span>
+                            <b>x2.5</b>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>claude-opus-4-6</span>
+                            <b>x4</b>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>claude-opus-4-7</span>
+                            <b>x5</b>
+                        </div>
+
+                        <div class="billing-row">
+                            <span>claude-opus-4-8</span>
+                            <b>x6</b>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="chinese-models-link">
+                    <span>
+                        <i class="fa-solid fa-bolt"></i>
+                        Все модели
+                    </span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+                <div class="billing-bottom">
+                    <div>
+                        <i class="fa-solid fa-bolt"></i>
+                        <strong>Priority</strong>
+                        <span>x2</span>
+                    </div>
+
+                    <div>
+                        <i class="fa-solid fa-database"></i>
+                        <span>Cache 100% billing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-panel logs-panel">
+            <h2>Full Request Logs</h2>
+
+            {% if request_logs %}
+                <div class="logs-table-wrap">
+                    <table class="logs-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>API key</th>
+                                <th>Model</th>
+                                <th>Provider</th>
+                                <th>Status</th>
+                                <th>Tokens</th>
+                                <th>Charged</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for log in request_logs %}
+                                <tr>
+                                    <td>{{ log.created_at|date:"d.m.Y H:i" }}</td>
+                                    <td>{{ log.api_key_name|default:"-" }}</td>
+                                    <td>{{ log.model_name|default:"-" }}</td>
+                                    <td>{{ log.provider_name|default:"-" }}</td>
+                                    <td>
+                                        <span class="log-status {{ log.status }}">
+                                            {{ log.status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ log.request_tokens }} / {{ log.response_tokens }}</td>
+                                    <td>{{ log.charged_tokens }}</td>
+                                    <td>{{ log.response_time_ms }} ms</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-logs">
+                    <div class="empty-logs-icon">
+                        <i class="fa-regular fa-folder-open"></i>
+                    </div>
+
+                    <strong>No request logs</strong>
+                    <p>No request logs match the current filters.</p>
+                </div>
+            {% endif %}
         </div>
 
     </div>
 </section>
+
+<div class="invite-modal-overlay js-invite-modal">
+    <div class="invite-modal">
+        <button type="button" class="invite-modal-close js-close-invite-modal">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="invite-modal-top">
+            <div class="invite-modal-icon">
+                <i class="fa-solid fa-user-group"></i>
+            </div>
+
+            <h2>Invite friends</h2>
+
+            <p>
+                You get 10M tokens when an invited user tops up 100 RUB or more.
+            </p>
+        </div>
+
+        <div class="invite-modal-body">
+            <div>
+                <span>Invite link</span>
+                <code class="js-invite-link">{{ invite_link }}</code>
+            </div>
+
+            <div>
+                <span>Total invited</span>
+                <strong>{{ total_invited }} users</strong>
+            </div>
+        </div>
+
+        <div class="invite-modal-actions">
+            <button type="button" class="copy-invite-btn js-copy-invite-link">
+                <i class="fa-regular fa-copy"></i>
+                Copy link
+            </button>
+
+            <button type="button" class="close-invite-btn js-close-invite-modal">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
 {% endblock %}

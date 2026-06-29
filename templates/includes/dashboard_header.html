@@ -29,10 +29,18 @@
                 <button type="button" class="active">EN</button>
             </div>
 
-            <a href="{% url 'accounts:logout' %}" class="dashboard-logout-btn">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                Sign out
-            </a>
+            <form
+                method="post"
+                action="{% url 'accounts:logout' %}"
+                class="dashboard-logout-form"
+            >
+                {% csrf_token %}
+
+                <button type="submit" class="dashboard-logout-btn">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Выйти
+                </button>
+            </form>
         </div>
 
     </div>
