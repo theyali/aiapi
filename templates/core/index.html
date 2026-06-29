@@ -227,13 +227,9 @@
                 </ul>
 
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'dashboard:index' %}" class="pricing-buy-btn">
-                        Купить
-                    </a>
+                    <a href="{% url 'billing:index' %}" class="pricing-buy-btn">Купить</a>
                 {% else %}
-                    <a href="{% url 'accounts:register' %}" class="pricing-buy-btn">
-                        Купить
-                    </a>
+                    <a href="{% url 'accounts:register' %}" class="pricing-buy-btn">Купить</a>
                 {% endif %}
             </div>
 

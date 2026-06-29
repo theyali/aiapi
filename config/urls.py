@@ -9,6 +9,7 @@ urlpatterns = [
     path("", include("apps.core.urls")),
     path("api/", include("apps.gateway.urls")),
     path("accounts/", include("apps.accounts.urls")),
+    path("dashboard/billing/", include("apps.billing.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
     path("api-keys/", include("apps.api_keys.urls")),
 ]

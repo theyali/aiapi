@@ -1,0 +1,106 @@
+<div class="payment-modal-overlay js-payment-modal">
+    <div class="payment-modal">
+
+        <button type="button" class="payment-modal-close js-close-payment-modal">
+            ×
+        </button>
+
+        <div class="payment-modal-left">
+
+            <div class="payment-methods-grid">
+                {% for method in payment_methods %}
+                    <button
+                        type="button"
+                        class="payment-method-card js-payment-method {% if not method.is_active %}is-disabled{% endif %}"
+                        data-provider="{{ method.code }}"
+                        {% if not method.is_active %}disabled{% endif %}
+                    >
+                        <div class="payment-method-icon">
+                            {% if method.code == "mock" %}
+                                🧪
+                            {% elif method.code == "sbp" %}
+                                ⚡
+                            {% elif method.code == "cards" %}
+                                💳
+                            {% elif method.code == "cryptobot" %}
+                                ₿
+                            {% elif method.code == "yookassa" %}
+                                Ю
+                            {% else %}
+                                💰
+                            {% endif %}
+                        </div>
+
+                        <strong>{{ method.title }}</strong>
+                        <span>{{ method.subtitle }}</span>
+
+                        {% if not method.is_active %}
+                            <small>Soon</small>
+                        {% endif %}
+                    </button>
+                {% endfor %}
+            </div>
+
+            <div class="topup-amount-box">
+                <span>TOP-UP AMOUNT</span>
+
+                <div class="topup-main-value">
+                    <strong class="js-modal-amount-rub">0</strong>
+                    <b>₽</b>
+                </div>
+
+                <div class="topup-progress">
+                    <div class="topup-progress-fill"></div>
+                    <div class="topup-progress-dot"></div>
+                </div>
+
+                <div class="topup-selected-info">
+                    <span class="js-modal-source-label">Package</span>
+                    <strong class="js-modal-tokens">0 tokens</strong>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="payment-modal-right">
+            <div class="payment-summary-card">
+                <span>TOTAL</span>
+
+                <h2>
+                    <span class="js-modal-total-rub">0</span> ₽
+                </h2>
+
+                <div class="payment-summary-row">
+                    <span>You receive</span>
+                    <strong class="js-modal-summary-tokens">0</strong>
+                </div>
+
+                <div class="payment-summary-row">
+                    <span>Rate</span>
+                    <strong>{{ billing_settings.rub_per_1m_tokens }} ₽ / 1M</strong>
+                </div>
+
+                <div class="payment-summary-row">
+                    <span>Crypto USD</span>
+                    <strong>
+                        ~<span class="js-modal-total-usd">0</span> $
+                    </strong>
+                </div>
+
+                <form method="post" action="{% url 'billing:create_payment' %}" class="js-payment-form">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="source" class="js-payment-source">
+                    <input type="hidden" name="package_id" class="js-payment-package-id">
+                    <input type="hidden" name="million_tokens" class="js-payment-million-tokens">
+                    <input type="hidden" name="provider" class="js-payment-provider" value="mock">
+
+                    <button type="submit" class="payment-proceed-btn">
+                        ↗ Proceed to Payment
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
