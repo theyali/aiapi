@@ -1,4 +1,10 @@
-<div class="payment-modal-overlay js-payment-modal">
+<div
+    class="payment-modal-overlay js-payment-modal"
+    data-rate-rub="{{ billing_settings.rub_per_1m_tokens }}"
+    data-usd-rate="{{ billing_settings.usd_to_rub_rate }}"
+    data-min-million="{{ billing_settings.min_custom_million_tokens }}"
+    data-max-million="{{ billing_settings.max_custom_million_tokens }}"
+>
     <div class="payment-modal">
 
         <button type="button" class="payment-modal-close js-close-payment-modal">
@@ -50,8 +56,16 @@
                 </div>
 
                 <div class="topup-progress">
-                    <div class="topup-progress-fill"></div>
-                    <div class="topup-progress-dot"></div>
+                    <div class="topup-progress-fill js-topup-progress-fill"></div>
+
+                    <input
+                        type="range"
+                        class="topup-range js-topup-range"
+                        min="{{ billing_settings.min_custom_million_tokens }}"
+                        max="{{ billing_settings.max_custom_million_tokens }}"
+                        value="{{ billing_settings.min_custom_million_tokens }}"
+                        step="1"
+                    >
                 </div>
 
                 <div class="topup-selected-info">

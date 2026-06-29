@@ -3,7 +3,11 @@
 {% block content %}
 <section class="dashboard-page billing-page">
     <div class="dashboard-container">
-
+        <a href="{% url 'dashboard:index' %}" class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            Назад
+        </a>
+        
         <div class="billing-header">
             <div>
                 <span class="billing-kicker">TOKEN BALANCE</span>
@@ -218,5 +222,5 @@
 
     </div>
 </section>
-{% include "billing/modals/payment.html" %}
+{% include "modals/payment.html" %}
 {% endblock %}
